@@ -22,7 +22,7 @@ public class HWServerHandler extends ChannelInboundHandlerAdapter {
 
         System.out.println(ctx.channel().remoteAddress()+"===>server: "+ret);
 //        ctx.write("received your msg\r\n");
-        ctx.write("ack:\t"+ret);
+        ctx.write("ack:\t"+ret+"##_");
         ctx.flush();
     }
 

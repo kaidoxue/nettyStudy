@@ -1,6 +1,8 @@
 package study.netty.prog1;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -33,22 +35,37 @@ public class HWClient {
             ChannelFuture future = bootstrap.connect(address,port).sync();
 //            future.channel().writeAndFlush("Hello Netty Server ,I am a common client");
 //            future.channel().closeFuture().sync();
+
+
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             for(;;){
                 String msg = reader.readLine();
                 if(msg == null){
                     continue;
                 }
+
+//                String tempStr = msg+"$$_";
+//                byte[] req = tempStr.getBytes();
+//                ByteBuf message;
+//                message = Unpooled.buffer(req.length);
+//                message.writeBytes(req);
+//                future.channel().writeAndFlush(message);
+
+
 //                future.channel().writeAndFlush(msg + "\r\n");
 
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         for(int i=0;i<20;i++){
-                            String toSendStr = String.valueOf(numTest)+"."+msg;
+                            String toSendStr = String.valueOf(numTest)+"."+msg+"$$_";
                             numTest++;
                             System.out.println(toSendStr);
-                            future.channel().writeAndFlush(toSendStr + "\r\n");
+                            byte[] req = toSendStr.getBytes();
+                            ByteBuf message;
+                            message = Unpooled.buffer(req.length);
+                            message.writeBytes(req);
+                            future.channel().writeAndFlush(message);
                         }
                     }
                 }).start();
